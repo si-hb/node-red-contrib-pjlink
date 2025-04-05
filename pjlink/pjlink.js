@@ -37,14 +37,7 @@ module.exports = function(RED) {
         node.interval = setInterval(refreshNodeStatus, 60 * 1000);
 
         function handleError(msg, err, projectorID) {
-            if (err && err.includes && (err.includes("EHOSTUNREACH") || err.includes("ECONNREFUSED"))) {
-                // Send network errors to the second output without logging them
-                node.send([null, { payload: `${projectorID} ${err}` }]);
-            } else {
-                // Log other errors and send them to the second output
-                node.error(`${projectorID} ${err}`, msg);
-                node.send([null, { payload: `${projectorID} ${err}` }]);
-            }
+            node.send([null, { payload: `${projectorID} ${err}` }]);
 
             if (projectorID && node.projectors[projectorID] && err && err.includes && err.includes("ECONNREFUSED")) {
                 // Reset the connection for ECONNREFUSED errors
